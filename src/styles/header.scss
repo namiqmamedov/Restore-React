@@ -1,0 +1,26 @@
+.main-nav{
+    display: flex;
+    gap: 2rem;
+    color: #fff;
+    a{
+        text-decoration: none;
+        color: #fff;
+        transition: .3s ease-in-out;
+
+        &:hover{
+            color: #9C27B0;
+        }
+    }
+}
+
+.nav-logo{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #fff;
+
+}
+
+.link-active{
+    color: #9C27B0 !important;
+}
