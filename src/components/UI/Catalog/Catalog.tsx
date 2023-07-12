@@ -1,15 +1,14 @@
 import { Product } from "../../../models/product"
 import ProductList from "../../../features/catalog/ProductList";
 import { useState, useEffect } from "react";
+import agent from "../../../api/agent";
 
 const  Catalog = () => {
 
   const [products,setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/product')
-    .then(res => res.json())
-    .then(data => setProducts(data))
+    agent.Product.list().then(products => setProducts(products))
   }, []) // [] that meaning endless loop blocking
 
 

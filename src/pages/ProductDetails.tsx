@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import { Product } from "../models/product";
+import agent from "../api/agent";
 
 const ProductDetails = () => {
     const {id} = useParams<{id: string}>();
@@ -11,8 +12,8 @@ const ProductDetails = () => {
 
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/product/${id}`)
-        .then(response => setProduct(response.data))
+        id && agent.Product.details(parseInt(id))
+        .then(response => setProduct(response))
         .catch(error => console.log(error))
         .finally(() => setLoading(false))
     }, [id]) // Bir bağımlılık belirttiğimiz (id) durumda,
