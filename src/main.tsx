@@ -7,12 +7,17 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { BrowserRouter as Router } from 'react-router-dom';
+// import { BrowserRouter as Router } from 'react-router-dom';
+
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
+
+export const router = createBrowserRouter([
+  // match everything with "*"
+  { path: "*", element: <App /> }
+])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Router>
-      <App />
-    </Router>
+     <RouterProvider router={router} />
   </React.StrictMode>,
 )

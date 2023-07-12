@@ -4,6 +4,7 @@ import About from '../pages/About'
 import Contact from '../pages/Contact'
 import ProductDetails from '../pages/ProductDetails'
 import Catalog from '../components/UI/Catalog/Catalog'
+import ServerError from '../errors/ServerError'
 
 const Routers = () => {
   return (
@@ -14,7 +15,7 @@ const Routers = () => {
         <Route path='/contact' element={<Contact/>} />
         <Route path='/product/:id' element={<ProductDetails/>} />
         <Route path='/product' element={<Catalog/>} />
-
+        <Route path='/server-error' element={<ServerError/>} />
     </Routes>
   )
 }
