@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom"
 import { Product } from "../models/product";
 import agent from "../api/agent";
 import NotFound from "../errors/NotFound";
+import Loading from "../common/Loading/Loading";
 
 const ProductDetails = () => {
     const {id} = useParams<{id: string}>();
@@ -20,7 +21,7 @@ const ProductDetails = () => {
             // kullanım efekti bileşen bağlandığında çağrılacak
             // ve ayrıca bağımlılığın (id) parametresi değişirse bnile tekrar çağrılacaktır.
 
-    if(loading) return <h3>Loading ...</h3>
+    if(loading) return <Loading/>
     
     if(!product) return <NotFound/>
 
