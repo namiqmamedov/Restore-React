@@ -28,7 +28,7 @@ axios.interceptors.response.use(async response => {
             toast.error(data);
             break;
         case 500:
-            router.navigate('/server-error')
+            router.navigate('/server-error', {state: {error: data}})
             break;    
        default:
             break;

@@ -5,6 +5,7 @@ import Contact from '../pages/Contact'
 import ProductDetails from '../pages/ProductDetails'
 import Catalog from '../components/UI/Catalog/Catalog'
 import ServerError from '../errors/ServerError'
+import NotFound from '../errors/NotFound'
 
 const Routers = () => {
   return (
@@ -16,6 +17,8 @@ const Routers = () => {
         <Route path='/product/:id' element={<ProductDetails/>} />
         <Route path='/product' element={<Catalog/>} />
         <Route path='/server-error' element={<ServerError/>} />
+        <Route path='/not-found' element={<NotFound/>} />
+        <Route path='*' element={<Navigate replace to='/not-found' />} />
     </Routes>
   )
 }
