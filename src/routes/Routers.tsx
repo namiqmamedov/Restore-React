@@ -7,6 +7,7 @@ import Catalog from '../components/UI/Catalog/Catalog'
 import ServerError from '../errors/ServerError'
 import NotFound from '../errors/NotFound'
 import BasketPage from '../components/UI/Basket/BasketPage'
+import Checkout from '../pages/Checkout'
 
 const Routers = () => {
   return (
@@ -20,6 +21,7 @@ const Routers = () => {
         <Route path='/server-error' element={<ServerError/>} />
         <Route path='/not-found' element={<NotFound/>} />
         <Route path='/basket' element={<BasketPage/>} />
+        <Route path='/checkout' element={<Checkout/>} />
         <Route path='*' element={<Navigate replace to='/not-found' />} />
     </Routes>
   )
