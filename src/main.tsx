@@ -9,7 +9,6 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import { StoreProvider } from './context/StoreContext';
 import { Provider } from 'react-redux';
 import { store } from './store/configureStore';
 
@@ -20,10 +19,8 @@ export const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <StoreProvider>
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>
-    </StoreProvider>
   </React.StrictMode>,
 )

@@ -1,10 +1,10 @@
 import { TableContainer, Paper, TableRow, TableCell, TableBody } from '@mui/material';
 import { Table } from 'react-bootstrap';
-import { useStoreContext } from '../../../context/StoreContext';
-import { currencyFormat } from '../../../util/util';
+import { currencyFormat } from '../../../util/util'; 
+import { useAppSelector } from '../../../store/configureStore';
 
 const BasketSummary = () => {
-    const {basket} = useStoreContext();
+    const {basket} = useAppSelector(state => state.basket);
     const subtotal = basket?.items.reduce((sum,item) => sum + (item.quantity * item.price), 0) ?? 0;
     const deliveryFee = subtotal > 1000 ? 0 : 500;
 
