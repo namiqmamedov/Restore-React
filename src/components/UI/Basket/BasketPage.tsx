@@ -1,14 +1,16 @@
 import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { Add, Delete, Remove } from '@mui/icons-material';
-import { useStoreContext } from '../../../context/StoreContext';
 import { useState } from 'react';
 import agent from '../../../api/agent';
 import { LoadingButton } from '@mui/lab';
 import BasketSummary from './BasketSummary';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../../store/configureStore';
+import { removeItem, setBasket } from '../../../store/shopping-cart/basketSlice';
 
 const BasketPage = () => {
-    const {basket, setBasket,removeItem} = useStoreContext();
+    const {basket} = useAppSelector(state => state.basket);
+    const dispatch = useAppDispatch()
     const [status,setStatus] = useState({
       loading: false,
       name: ''
@@ -17,15 +19,15 @@ const BasketPage = () => {
     function handleAddItem(productID: number, name: string){
        setStatus({loading: true,name})
        agent.Basket.addItem(productID)
-        .then(basket => setBasket(basket))
+        .then(basket => dispatch(setBasket(basket)))
         .catch(error => console.log(error))
         .finally(() => setStatus({loading: false, name: ''}))
     } 
 
-    function handleRemoveItem(productID: number, quantity = 1,name: string){
+    function handleRemoveItem(productID: number, quantity = 1, name: string){
       setStatus({loading: true,name})
       agent.Basket.removeItem(productID,quantity)
-          .then(() => removeItem(productID,quantity))
+          .then(() => dispatch(removeItem({productID,quantity})))
           .catch(error => console.log(error))
           .finally(() => setStatus({loading: false, name: ''}))
    } 
@@ -33,7 +35,7 @@ const BasketPage = () => {
     if(!basket) return <Typography variant='h3'>Your basket is empty</Typography>
 
   return (
-      <>
+      <> 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }}>
           <TableHead>
@@ -60,8 +62,8 @@ const BasketPage = () => {
                 <TableCell align="right">${(item.price / 100).toFixed(2)}</TableCell>
                 <TableCell align="center">
                 <LoadingButton
-                  loading={status.loading && status.name === 'zem' + item.productID} 
-                    onClick={() => handleRemoveItem(item.productID, 1, 'zem' + item.productID)}  color='secondary'>
+                  loading={status.loading && status.name === 'rem' + item.productID} 
+                    onClick={() => handleRemoveItem(item.productID, 1, 'rem' + item.productID)}  color='secondary'>
                     <Remove/>
                 </LoadingButton>
                   {item.quantity}
