@@ -10,6 +10,7 @@ import '@fontsource/roboto/700.css';
 // import { BrowserRouter as Router } from 'react-router-dom';
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { StoreProvider } from './context/StoreContext';
 
 export const router = createBrowserRouter([
   // match everything with "*"
@@ -18,6 +19,8 @@ export const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-     <RouterProvider router={router} />
+    <StoreProvider>
+      <RouterProvider router={router} />
+    </StoreProvider>
   </React.StrictMode>,
 )

@@ -35,7 +35,7 @@ const Header = ({darkMode,handleThemeChange} : Props) => {
             </NavLink>
          </div>
 
-        <IconButton size='large' edge='start' color='inherit' sx={{mr: 2}}>
+        <IconButton component={Link} to='/basket' size='large' edge='start' color='inherit' sx={{mr: 2}}>
           <Badge badgeContent='4' color="secondary">
               <ShoppingCartIcon/>
           </Badge>
