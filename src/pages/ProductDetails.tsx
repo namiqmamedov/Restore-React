@@ -1,30 +1,27 @@
 import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
-import { Product } from "../models/product";
-import agent from "../api/agent";
 import NotFound from "../errors/NotFound";
-import Loading from "../common/Loading/Loading";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../store/configureStore";
 import { addBasketItemAsync, removeBasketItemAsync } from "../store/shopping-cart/basketSlice";
+import { fetchProductAsync, productSelectors } from "../store/shopping-cart/productSlice";
+import Loading from "../common/Loading/Loading";
 
 const ProductDetails = () => {
     const {basket, status} = useAppSelector(state => state.basket);
     const dispatch = useAppDispatch() 
     const {id} = useParams<{id: string}>();
-    const [product, setProduct] = useState<Product | null>(null)
-    const [loading,setLoading] = useState(true);
+    const product = useAppSelector(state => productSelectors.selectById(state, id!))
+    const {status: productStatus} = useAppSelector(state => state.product)
     const [quantity,setQuantity] = useState(0);
     const item = basket?.items.find(i => i.productID === product?.id);
 
     useEffect(() => {
       if(item) setQuantity(item.quantity)
-        id && agent.Product.details(parseInt(id))
-        .then(response => setProduct(response))
-        .catch(error => console.log(error))
-        .finally(() => setLoading(false))
-    }, [id,item]) // Bir bağımlılık belirttiğimiz (id) durumda,
+      if(!product) dispatch(fetchProductAsync(parseInt((!product && id!))))
+    }, [id,item,dispatch,product]) 
+            // Bir bağımlılık belirttiğimiz (id) durumda,
             // kullanım efekti bileşen bağlandığında çağrılacak
             // ve ayrıca bağımlılığın (id) parametresi değişirse bnile tekrar çağrılacaktır.
 
@@ -45,7 +42,7 @@ const ProductDetails = () => {
       }
     }
 
-    if(loading) return <Loading/>
+     if(productStatus.includes('pending')) return <Loading/>
     
     if(!product) return <NotFound/>
 

@@ -11,7 +11,7 @@ const  Catalog = () => {
 
   useEffect(() => {
     if(!productsLoaded) dispatch(fetchProductsAsync());
-  }, [productsLoaded]) // [] that meaning endless loop blocking
+  }, [productsLoaded,dispatch]) // [] that meaning endless loop blocking
 
    if(status.includes('pending')) return <Loading message="Loading..."/>
 
