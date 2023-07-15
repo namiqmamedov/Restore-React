@@ -18,7 +18,7 @@ const sortOptions = [
 
 const  Catalog = () => {
   const products = useAppSelector(productSelectors.selectAll);
-  const {productsLoaded,filtersLoaded,status,brands,types,productParams,metaData} = useAppSelector(state => state.product)
+  const {productsLoaded,filtersLoaded,brands,types,productParams,metaData} = useAppSelector(state => state.product)
   const dispatch = useAppDispatch();
   
 
@@ -30,7 +30,8 @@ const  Catalog = () => {
     if(!filtersLoaded) dispatch(fetchFilters());
   }, [dispatch,filtersLoaded])
 
-   if(status.includes('pending') || !metaData) return <Loading message="Loading..."/>
+  if(!filtersLoaded) return <Loading message="Loading..." />
+
 
   return (
     <Grid container columnSpacing={4}>
@@ -65,11 +66,12 @@ const  Catalog = () => {
       </Grid>
       <Grid item xs={3} />
       <Grid item xs={9} sx={{mb: 2}}>
+        {metaData && 
             <AppPagination
               metaData={metaData}
               onPageChange={(page: number) =>
               dispatch(setPageNumber({pageNumber: page}))}
-            />
+            />}
       </Grid>
     </Grid>
   )
