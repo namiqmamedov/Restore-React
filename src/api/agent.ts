@@ -40,10 +40,10 @@ axios.interceptors.response.use(async response => {
                 }
                 throw modelStateErrors.flat();
             }
-            toast.error(data);
+            toast.error(data.title);
             break;
         case 401:
-            toast.error(data || 'Unauthorised');
+            toast.error(data.title);
             break;
         case 500:
             router.navigate('/server-error', {state: {error: data}})

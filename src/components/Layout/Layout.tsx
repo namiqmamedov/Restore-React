@@ -1,34 +1,35 @@
 import Header from '../Header/Header'
 import Routers from '../../routes/Routers'
 import { Container, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/ReactToastify.css'
-import { useStoreContext } from '../../context/StoreContext';
-import agent from '../../api/agent';
 import Loading from '../../common/Loading/Loading';
-import { getCookie } from '../../util/util';
 import { useAppDispatch } from '../../store/configureStore';
-import { setBasket } from '../../store/shopping-cart/basketSlice';
+import { fetchBasketAsync } from '../../store/shopping-cart/basketSlice';
 import { fetchCurrentUser } from '../../store/shopping-cart/accountSlice';
 
 const Layout = () => {
   const dispatch = useAppDispatch();  
   const [loading,setLoading] = useState(true);
 
+
+  //  (use callback ) kullandigimizda işlevi şimdi ezberleyecek ve herhangi bir yeniden oluşturucuda değişmemesini
+  // sağlayacak, bu da bağımlılığımızın ve kullanım etkimizin değişmeyeceği anlamına geliyor, bu da,
+  // uygulamamızı başlattıktan sonra bunu bir daha asla aramayacağı anlamına geliyor
+  
+  const initApp = useCallback(async () =>  {  
+    try {
+      await dispatch(fetchCurrentUser());
+      await dispatch(fetchBasketAsync());
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch])
+
     useEffect(() => {
-        const buyerID = getCookie('buyerID');
-        dispatch(fetchCurrentUser())
-        if(buyerID) {
-          agent.Basket.get()
-            .then(basket => dispatch(setBasket(basket)))
-            .catch(error => console.log(error))
-            .finally(() => setLoading(false))
-        }
-        else{
-          setLoading(false)
-        }
-    }, [dispatch])
+      initApp().then(() => setLoading(false));
+    }, [initApp])
 
     const [darkMode,setDarkMode] = useState(false);
     const paletteType = darkMode ? 'dark' : 'light'
