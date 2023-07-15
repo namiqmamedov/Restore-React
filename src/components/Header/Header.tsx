@@ -7,6 +7,7 @@ import '../../styles/header.css'
 import Badge from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useAppSelector } from '../../store/configureStore';
+import SignedInMenu from '../UI/SignedInMenu/SignedInMenu';
 
 interface Props {
   darkMode: boolean;
@@ -15,6 +16,7 @@ interface Props {
 
 const Header = ({darkMode,handleThemeChange} : Props) => {
   const {basket} = useAppSelector(state => state.basket);
+  const {user} = useAppSelector(state => state.account);
   const itemCount = basket?.items.reduce((sum,item) => sum + item.quantity, 0)
   
   return (
@@ -25,6 +27,7 @@ const Header = ({darkMode,handleThemeChange} : Props) => {
        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           RE-STORE
         </Typography>
+        <Switch checked={darkMode} onChange={handleThemeChange} />
        </Link>
 
         <div className="mx-auto main-nav">
@@ -44,9 +47,23 @@ const Header = ({darkMode,handleThemeChange} : Props) => {
               <ShoppingCartIcon/>
           </Badge>
         </IconButton>
-
-        <Switch checked={darkMode} onChange={handleThemeChange} />
-        {/* <Button color="inherit">Login</Button> */}
+        {user ? (
+          <SignedInMenu/>
+        ) : (
+          <div className='d-flex gap-3'>
+            <Link to={'/login'} color='white'>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                LOGIN
+              </Typography>
+            </Link>
+            
+            <Link to={'/register'} color='white'>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                REGISTER
+              </Typography>
+            </Link>
+          </div>
+        )}
       </Toolbar>
     </AppBar>
   )
