@@ -23,12 +23,14 @@ const Header = ({darkMode,handleThemeChange} : Props) => {
     <AppBar position="static" sx={{mb: 4}}>
       <Toolbar>
 
-       <Link to={'/'} className='nav-logo'>
-       <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          RE-STORE
-        </Typography>
-        <Switch checked={darkMode} onChange={handleThemeChange} />
-       </Link>
+       <div className='d-flex align-items-center'>
+        <Link to={'/'} className='nav-logo'>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            RE-STORE
+          </Typography>
+        </Link>
+          <Switch checked={darkMode} onChange={handleThemeChange} />
+       </div>
 
         <div className="mx-auto main-nav">
             <NavLink to="product" className={({ isActive }) => (isActive ? 'link-active' : '')}>

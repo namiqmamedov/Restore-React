@@ -10,10 +10,14 @@ import BasketPage from '../components/UI/Basket/BasketPage'
 import Checkout from '../pages/Checkout'
 import Register from '../pages/Account/Register'
 import Login from '../pages/Account/Login'
+import RequireAuth from './RequireAuth'
 
 const Routers = () => {
   return (
     <Routes>
+        <Route element={<RequireAuth/>}>
+          <Route path='checkout' element={<Checkout/>} />
+        </Route>
         <Route path='/' element={<Navigate to={'home'}/>} /> 
         <Route path='/home' element={<Home/>} />
         <Route path='/about' element={<About/>} />

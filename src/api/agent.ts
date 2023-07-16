@@ -40,10 +40,10 @@ axios.interceptors.response.use(async response => {
                 }
                 throw modelStateErrors.flat();
             }
-            toast.error(data.title);
+            toast.error(data);
             break;
         case 401:
-            toast.error(data.title);
+            toast.error(data);
             break;
         case 500:
             router.navigate('/server-error', {state: {error: data}})

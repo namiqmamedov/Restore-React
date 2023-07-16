@@ -18,11 +18,11 @@ export default function Register() {
         mode: 'all'
     })
 
-    
+
     function handleApiErrors(errors: any) {
       console.log(errors);
       if (errors) {
-          errors.forEach((error: string, index: number) => {
+          errors.forEach((error: string) => {
               if (error.includes('Password')) {
                   setError('password', { message: error })
               } else if (error.includes('Email')) {
