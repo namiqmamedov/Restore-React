@@ -18,20 +18,21 @@ export default function Register() {
         mode: 'all'
     })
 
+    
     function handleApiErrors(errors: any) {
-      if(errors) {
-        errors.foreach((error:string) => {
-           if(error.includes('Password')) {
-              setError('password',{message: error})
-           }
-           else if(error.includes('Email')) {
-            setError('email',{message: error})
-           } else if (error.includes('Username')){
-              setError('username',{message:error})
-           }
-        });
+      console.log(errors);
+      if (errors) {
+          errors.forEach((error: string, index: number) => {
+              if (error.includes('Password')) {
+                  setError('password', { message: error })
+              } else if (error.includes('Email')) {
+                  setError('email', { message: error })
+              } else if (error.includes('Username')) {
+                  setError('username', { message: error })
+              }
+          });
       }
-    }
+  }
 
   return (
       <Container component={Paper} maxWidth="sm"
@@ -92,15 +93,15 @@ export default function Register() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-            <LoadingButton loading={isSubmitting}
-              disabled={!isValid}
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Register
-            </LoadingButton >
+                <LoadingButton
+                    disabled={!isValid}
+                    loading={isSubmitting}
+                    type="submit"
+                    fullWidth
+                    variant="contained" sx={{ mt: 3, mb: 2 }}
+                >
+                    Register
+                </LoadingButton>
             <Grid container>
               {/* <Grid item xs>
                 <Link href="#" variant="body2">
