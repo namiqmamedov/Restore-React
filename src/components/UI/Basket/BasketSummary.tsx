@@ -3,10 +3,15 @@ import { Table } from 'react-bootstrap';
 import { currencyFormat } from '../../../util/util'; 
 import { useAppSelector } from '../../../store/configureStore';
 
-const BasketSummary = () => {
+interface Props {
+  subtotal?: number;
+}
+
+const BasketSummary = ({subtotal}: Props) => {
     const {basket} = useAppSelector(state => state.basket);
-    const subtotal = basket?.items.reduce((sum,item) => sum + (item.quantity * item.price), 0) ?? 0;
-    const deliveryFee = subtotal > 1000 ? 0 : 500;
+    if (subtotal === undefined) 
+        subtotal = basket?.items.reduce((sum, item) => sum + (item.quantity * item.price), 0) ?? 0;
+    const deliveryFee = subtotal > 10000 ? 0 : 500;
 
   return (
     <>

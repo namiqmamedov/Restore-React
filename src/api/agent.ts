@@ -82,17 +82,25 @@ const Basket = {
     removeItem: (productID: number, quantity = 1) => requests.delete(`basket?productID=${productID}&quantity=${quantity}`,)
 }
 
+const Orders = {
+    list:() => requests.get('order'),
+    fetch: (id: number) => requests.get(`order/${id}`),
+    create: (values: any) => requests.post('order',values) 
+}
+
 const Account = {
     login: (values: any) => requests.post('account/login', values),
     register: (values: any) => requests.post('account/register',values),
     currentUser: () => requests.get('account/currentUser'),
+    fetchAddress: () => requests.get('account/savedAddress'),
 }
 
 const agent = {
     Product,
     TestErrors,
     Basket,
-    Account
+    Account,
+    Orders
 }
 
 export default agent;
