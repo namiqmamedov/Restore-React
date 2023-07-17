@@ -12,12 +12,13 @@ import Register from '../pages/Account/Register'
 import Login from '../pages/Account/Login'
 import RequireAuth from './RequireAuth'
 import Orders from '../pages/Orders'
+import CheckoutWrapper from '../components/UI/CheckoutWrapper/CheckoutWrapper'
 
 const Routers = () => {
   return (
     <Routes>
         <Route element={<RequireAuth/>}>
-          <Route path='/checkout' element={<Checkout/>} />
+          <Route path='/checkout' element={<CheckoutWrapper/>} />
           <Route path='/orders' element={<Orders/>} />
         </Route>
         <Route path='/' element={<Navigate to={'home'}/>} /> 
