@@ -9,6 +9,9 @@ import Typography from '@mui/material/Typography';
 import AddressForm from '../components/UI/AddressForm/AddressForm';
 import PaymentForm from '../components/UI/PaymentForm/PaymentForm';
 import Review from '../components/UI/Review/Review';
+import { FieldValues, FormProvider, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { validationSchema } from '../validation/checkoutValidation';
 
 const steps = ['Shipping address', 'Payment details', 'Review your order'];
 
@@ -28,9 +31,17 @@ function getStepContent(step: number) {
 // TODO remove, this demo shouldn't need to reset the theme.
 
 export default function Checkout() {
+  const methods = useForm({
+    mode: 'onTouched',
+    resolver: yupResolver(validationSchema)
+  });
   const [activeStep, setActiveStep] = React.useState(0);
 
-  const handleNext = () => {
+  const handleNext = (data: FieldValues) => {
+    if(activeStep === 0) {
+      console.log(data);
+      
+    }
     setActiveStep(activeStep + 1);
   };
 
@@ -39,7 +50,8 @@ export default function Checkout() {
   };
 
   return (
-        <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+    <FormProvider {...methods}>
+              <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
           <Typography component="h1" variant="h4" align="center">
             Checkout
           </Typography>
@@ -62,7 +74,7 @@ export default function Checkout() {
               </Typography>
             </React.Fragment>
           ) : (
-            <React.Fragment>
+            <form onSubmit={methods.handleSubmit(handleNext)}>
               {getStepContent(activeStep)}
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 {activeStep !== 0 && (
@@ -72,14 +84,15 @@ export default function Checkout() {
                 )}
                 <Button
                   variant="contained"
-                  onClick={handleNext}
+                 type='submit'
                   sx={{ mt: 3, ml: 1 }}
                 >
                   {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
                 </Button>
               </Box>
-            </React.Fragment>
+            </form>
           )}
         </Paper>
+    </FormProvider>
   );
 }
