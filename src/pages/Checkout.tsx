@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import AddressForm from '../components/UI/AddressForm/AddressForm';
 import PaymentForm from '../components/UI/PaymentForm/PaymentForm';
 import Review from '../components/UI/Review/Review';
-import { FieldValues, FormProvider, useForm } from 'react-hook-form';
+import { FieldValues, FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validationSchema } from '../validation/checkoutValidation';
 import agent from '../api/agent';
@@ -17,6 +17,8 @@ import { clearBasket } from '../store/shopping-cart/basketSlice';
 import { useAppDispatch } from '../store/configureStore';
 import { LoadingButton } from '@mui/lab';
 import { useEffect } from 'react';
+import { StripeElementType } from '@stripe/stripe-js';
+
 
 const steps = ['Shipping address', 'Review your order', 'Payment details', ];
 
@@ -41,6 +43,22 @@ export default function Checkout() {
   const [orderNumber, setOrderNumber] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const dispatch = useAppDispatch();
+  const {control} = useFormContext();
+  
+  const [cardState, setCardState] = React.useState<{elementError: {[key in StripeElementType]? : string}}>({elementError: {}})
+
+  const [cardComplete,setCardComplete] = React.useState<any>({cardNumber: false, cardExpiry: false,cardCvc: false})
+
+  function onCardInputChange(event: any) {
+    setCardState({
+      ...cardState,
+      elementError: {
+        ...cardState.elementError, 
+        [event.elementType] : event.error?.message
+      }
+    })
+    setCardComplete({...cardComplete,[event.elementType]: event.complete});
+  }
 
   const currentValidationSchema = validationSchema[activeStep]
 
