@@ -9,31 +9,20 @@ import Typography from '@mui/material/Typography';
 import AddressForm from '../components/UI/AddressForm/AddressForm';
 import PaymentForm from '../components/UI/PaymentForm/PaymentForm';
 import Review from '../components/UI/Review/Review';
-import { FieldValues, FormProvider, useForm, useFormContext } from 'react-hook-form';
+import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validationSchema } from '../validation/checkoutValidation';
 import agent from '../api/agent';
 import { clearBasket } from '../store/shopping-cart/basketSlice';
-import { useAppDispatch } from '../store/configureStore';
+import { useAppDispatch, useAppSelector } from '../store/configureStore';
 import { LoadingButton } from '@mui/lab';
 import { useEffect } from 'react';
 import { StripeElementType } from '@stripe/stripe-js';
-
+import { CardNumberElement, useElements, useStripe } from '@stripe/react-stripe-js';
 
 const steps = ['Shipping address', 'Review your order', 'Payment details', ];
 
-function getStepContent(step: number) {
-  switch (step) {
-    case 0:
-      return <AddressForm />;
-    case 1:
-      return <Review />; 
-    case 2:
-      return <PaymentForm />;  
-    default:
-      throw new Error('Unknown step');
-  }
-}
+
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -43,11 +32,15 @@ export default function Checkout() {
   const [orderNumber, setOrderNumber] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const dispatch = useAppDispatch();
-  const {control} = useFormContext();
-  
+
   const [cardState, setCardState] = React.useState<{elementError: {[key in StripeElementType]? : string}}>({elementError: {}})
 
   const [cardComplete,setCardComplete] = React.useState<any>({cardNumber: false, cardExpiry: false,cardCvc: false})
+  const [paymentMessage, setPaymentMessage] = React.useState('');
+  const [paymentSucceeded, setPaymentSucceeded] = React.useState(false);
+  const {basket} = useAppSelector(state => state.basket);
+  const stripe = useStripe();
+  const elements = useElements()
 
   function onCardInputChange(event: any) {
     setCardState({
@@ -58,6 +51,19 @@ export default function Checkout() {
       }
     })
     setCardComplete({...cardComplete,[event.elementType]: event.complete});
+  }
+
+  function getStepContent(step: number) {
+    switch (step) {
+      case 0:
+        return <AddressForm />;
+      case 1:
+        return <Review />; 
+      case 2:
+        return <PaymentForm cardState={cardState} onCardInputChange={onCardInputChange} />;  
+      default:
+        throw new Error('Unknown step');
+    }
   }
 
   const currentValidationSchema = validationSchema[activeStep]
@@ -76,22 +82,49 @@ export default function Checkout() {
       })
   }, [methods])
 
-  const handleNext = async (data: FieldValues) => {
+  async function submitOrder(data: FieldValues){
+     setLoading(true);
     const {nameOnCard,saveAddress,...shippingAddress} = data;
-    if(activeStep === steps.length - 1) {
-      setLoading(true);
-      try {
-        const orderNumber = await agent.Orders.create({saveAddress,shippingAddress})
-        setOrderNumber(orderNumber);
-        setActiveStep(activeStep + 1);
-        dispatch(clearBasket());
-        setLoading(false)
-      } catch (error) {
-        console.log(error);
-        setLoading(false)
+    if(!stripe || !elements) return; // stripe is not ready
+
+    try {
+      const cardElement = elements.getElement(CardNumberElement);
+      const paymentResult = await stripe.confirmCardPayment(basket?.clientSecret!, {
+        payment_method:{
+          card: cardElement!,
+          billing_details: {
+            name: nameOnCard
+          }
+        }
+      });
+      console.log(paymentResult);
+
+      if(paymentResult.paymentIntent?.status === 'succeeded'){
+          const orderNumber = await agent.Orders.create({saveAddress,shippingAddress})
+          setOrderNumber(orderNumber);
+          setPaymentSucceeded(true);
+          setPaymentMessage('Thank you - we have received your payment')
+          setActiveStep(activeStep + 1);
+          dispatch(clearBasket());
+          setLoading(false);
       }
+      else{
+        setPaymentMessage(paymentResult.error?.message!);
+        setPaymentSucceeded(false);
+        setLoading(false)
+        setActiveStep(activeStep + 1);
+      }
+      
+    } catch (error) {
+        console.log(error);
+        setLoading(false);
     }
-    else{
+  }
+
+  const handleNext = async (data: FieldValues) => {
+    if(activeStep === steps.length - 1) {
+      await submitOrder(data);
+    } else{
       setActiveStep(activeStep + 1);
     }
   };
@@ -99,6 +132,18 @@ export default function Checkout() {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+
+  function submitDisabled() : boolean {
+    if(activeStep === steps.length -1){
+      return !cardComplete.cardCvc 
+      || !cardComplete.cardExpiry 
+      || !cardComplete.cardNumber
+      || !methods.formState.isValid
+    }
+    else{
+      return !methods.formState.isValid
+    }
+  }
 
   return (
     <FormProvider {...methods}>
@@ -114,16 +159,24 @@ export default function Checkout() {
             ))}
           </Stepper>
           {activeStep === steps.length ? (
-            <React.Fragment>
+            <>
               <Typography variant="h5" gutterBottom>
-                Thank you for your order.
+                {/* Thank you for your order. */}
+                {paymentMessage}
               </Typography>
-              <Typography variant="subtitle1">
-                Your order number is #{orderNumber}. We have emailed your order
-                confirmation, and will send you an update when your order has
-                shipped.
-              </Typography>
-            </React.Fragment>
+              {paymentSucceeded ? (
+                                <Typography variant="subtitle1">
+                                Your order number is #{orderNumber}. We have emailed your order
+                                confirmation, and will send you an update when your order has
+                                shipped.
+                              </Typography>
+              ) : (
+                <Button variant='contained' onClick={handleBack}>
+                  Go back and try again
+                </Button>
+              )}
+
+            </>
           ) : (
             <form onSubmit={methods.handleSubmit(handleNext)}>
               {getStepContent(activeStep)}
@@ -135,7 +188,7 @@ export default function Checkout() {
                 )}
                 <LoadingButton
                   loading={loading}
-                  disabled={!methods.formState.isValid}
+                  disabled={submitDisabled()}
                   variant="contained"
                   type='submit'
                   sx={{ mt: 3, ml: 1 }}

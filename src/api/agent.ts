@@ -78,7 +78,7 @@ const TestErrors = {
 
 const Basket = {
     get: () => requests.get('basket'),
-    addItem: (productID: number, quantity = 1) => requests.post(`basket?productID=${productID}&quantity=${quantity}`,{}), // post request oldugu ucun bos obyekt gonderirik
+    addItem: (productID: number, quantity = 1) => requests.post(`basket?productID=${productID}&quantity=${quantity}`,{}), // post request oldugu ucun bos obyekt gonderirik cunki basda hecne gondermirik
     removeItem: (productID: number, quantity = 1) => requests.delete(`basket?productID=${productID}&quantity=${quantity}`,)
 }
 
@@ -95,12 +95,17 @@ const Account = {
     fetchAddress: () => requests.get('account/savedAddress'),
 }
 
+const Payments = {
+    createPaymentIntent: () => requests.post('payments',{})
+}
+
 const agent = {
     Product,
     TestErrors,
     Basket,
     Account,
-    Orders
+    Orders,
+    Payments
 }
 
 export default agent;
