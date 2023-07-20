@@ -42,6 +42,11 @@ const Header = ({darkMode,handleThemeChange} : Props) => {
             <NavLink to="contact" className={({ isActive }) => (isActive ? 'link-active' : '')}>
               CONTACT
             </NavLink>
+            {user && 
+                <NavLink to="inventory" className={({ isActive }) => (isActive ? 'link-active' : '')}>
+                  INVENTORY
+                </NavLink>
+            }
          </div>
 
         <IconButton component={Link} to='/basket' size='large' edge='start' color='inherit' sx={{mr: 2}}>

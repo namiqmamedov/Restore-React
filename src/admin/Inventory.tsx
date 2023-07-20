@@ -7,6 +7,7 @@ import { useAppDispatch } from "../store/configureStore";
 import { setPageNumber } from "../store/shopping-cart/productSlice";
 import { currencyFormat } from "../util/util";
 import useProducts from "../hooks/useProducts";
+import ProductForm from "./ProductForm";
 
 
 export default function Inventory() {
@@ -31,12 +32,12 @@ export default function Inventory() {
     //         .finally(() => setLoading(false))
     // }
 
-    // function cancelEdit() {
-    //     if (selectedProduct) setSelectedProduct(undefined);
-    //     setEditMode(false);
-    // }
+    function cancelEdit() {
+        if (selectedProduct) setSelectedProduct(undefined);
+        setEditMode(false);
+    }
 
-    // if (editMode) return <ProductForm product={selectedProduct} cancelEdit={cancelEdit} />
+   if (editMode) return <ProductForm product={selectedProduct} cancelEdit={cancelEdit} />
 
     return (
         <>
