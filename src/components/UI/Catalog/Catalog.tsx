@@ -1,13 +1,13 @@
 import ProductList from "../../../features/catalog/ProductList";
-import { useEffect } from "react";
 import Loading from "../../../common/Loading/Loading";
 import { useAppDispatch, useAppSelector } from "../../../store/configureStore";
-import { fetchFilters, fetchProductsAsync, productSelectors, setPageNumber, setProductParams } from "../../../store/shopping-cart/productSlice";
+import { setPageNumber, setProductParams } from "../../../store/shopping-cart/productSlice";
 import { Grid, Paper } from "@mui/material";
 import ProductSearch from "../ProductSearch/ProductSearch";
 import RadioButtonGroup from "../RadioButtonGroup/RadioButtonGroup";
 import CheckboxButtons from "../CheckboxButtons/CheckboxButtons";
 import AppPagination from "../AppPagination/AppPagination";
+import useProducts from "../../../hooks/useProducts";
 
 
 const sortOptions = [
@@ -17,18 +17,9 @@ const sortOptions = [
 ]
 
 const  Catalog = () => {
-  const products = useAppSelector(productSelectors.selectAll);
-  const {productsLoaded,filtersLoaded,brands,types,productParams,metaData} = useAppSelector(state => state.product)
+  const {products,filtersLoaded,brands,types,metaData} = useProducts()
+  const {productParams} = useAppSelector(state => state.product)
   const dispatch = useAppDispatch();
-  
-
-  useEffect(() => {
-    if(!productsLoaded) dispatch(fetchProductsAsync());
-  }, [productsLoaded,dispatch]) // [] that meaning endless loop blocking
-
-  useEffect(() => {
-    if(!filtersLoaded) dispatch(fetchFilters());
-  }, [dispatch,filtersLoaded])
 
   if(!filtersLoaded) return <Loading message="Loading..." />
 

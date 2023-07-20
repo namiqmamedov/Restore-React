@@ -28,7 +28,7 @@ const BasketTable = ({items, isBasket = true}:Props) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {items.map(item => (
+        {items?.map(item => (
                         <TableRow
                         key={item.productID}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

@@ -8,8 +8,11 @@ import Loading from '../../common/Loading/Loading';
 import { useAppDispatch } from '../../store/configureStore';
 import { fetchBasketAsync } from '../../store/shopping-cart/basketSlice';
 import { fetchCurrentUser } from '../../store/shopping-cart/accountSlice';
+import { useLocation } from 'react-router-dom';
+import Home from '../../pages/Home';
 
 const Layout = () => {
+  const location = useLocation();
   const dispatch = useAppDispatch();  
   const [loading,setLoading] = useState(true);
 
@@ -46,7 +49,7 @@ const Layout = () => {
       setDarkMode(!darkMode)
     }
     
-    if(loading) return <Loading/>
+    if(loading) return 
 
   return (
     <>
@@ -55,9 +58,12 @@ const Layout = () => {
       <CssBaseline/>
         <Header darkMode={false}
         handleThemeChange={handleThemeChange} />
-        <Container>
-            <Routers/>
-        </Container>
+        {loading ? <Loading/> : location.pathname === '/home' ? <Home/> :
+          <Container  sx={{mt: 4}}>
+              <Routers/>
+          </Container>  
+        }
+
     </ThemeProvider>
     </>
   )

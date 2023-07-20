@@ -13,6 +13,7 @@ import Login from '../pages/Account/Login'
 import RequireAuth from './RequireAuth'
 import Orders from '../pages/Orders'
 import CheckoutWrapper from '../components/UI/CheckoutWrapper/CheckoutWrapper'
+import Inventory from '../admin/Inventory'
 
 const Routers = () => {
   return (
@@ -20,6 +21,7 @@ const Routers = () => {
         <Route element={<RequireAuth/>}>
           <Route path='/checkout' element={<CheckoutWrapper/>} />
           <Route path='/orders' element={<Orders/>} />
+          <Route path='/inventory' element={<Inventory/>} />
         </Route>
         <Route path='/' element={<Navigate to={'home'}/>} /> 
         <Route path='/home' element={<Home/>} />

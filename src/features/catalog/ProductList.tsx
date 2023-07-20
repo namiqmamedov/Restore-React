@@ -5,7 +5,7 @@ import { useAppSelector } from "../../store/configureStore";
 import ProductCardSkeleton from "../../components/UI/ProductCardSkeleton/ProductCardSkeleton";
 
 interface Props {
-    products: Product[];
+    products?: Product[];
 }
 
 export default function ProductList({products} : Props){
@@ -13,7 +13,7 @@ export default function ProductList({products} : Props){
     return (
         <List>
             <Grid container spacing={4}>
-                {products.map(product => (
+                {products?.map(product => (
                     <Grid item xs={4} key={product.id}>
                         {!productsLoaded ? (
                             <ProductCardSkeleton/>

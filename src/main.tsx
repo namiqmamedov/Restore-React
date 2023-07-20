@@ -11,6 +11,8 @@ import '@fontsource/roboto/700.css';
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { Provider } from 'react-redux';
 import { store } from './store/configureStore';
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 
 export const router = createBrowserRouter([
   // match everything with "*"
