@@ -1,8 +1,7 @@
 import { Box, Paper, Typography, Grid, Button } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { LoadingButton } from "@mui/lab";
-import { yupResolver } from "@hookform/resolvers/yup";
 import agent from "../api/agent";
 import AppTextInput from "../components/UI/AppTextInput/AppTextInput";
 import useProducts from "../hooks/useProducts";
@@ -11,6 +10,8 @@ import { useAppDispatch } from "../store/configureStore";
 import AppSelectList from "../components/UI/AppSelectList/AppSelectList";
 import AppDropzone from "../components/UI/AppDropzone/AppDropzone";
 import { validationSchema } from "../validation/productValidation";
+import { setProduct } from "../store/shopping-cart/productSlice";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface Props {
     product?: Product;
@@ -18,27 +19,42 @@ interface Props {
 }
 
 export default function ProductForm({ product, cancelEdit }: Props) {
-    const { control  , reset, handleSubmit, watch, formState: { isDirty, isSubmitting } } = useForm({
-        // resolver: yupResolver(validationSchema)
+    const { control, reset, handleSubmit, watch, formState: { isDirty, isSubmitting }} = useForm({
+         // resolver: yupResolver(validationSchema)
     });
     const { brands, types } = useProducts();
     const watchFile = watch('file', null);
     const dispatch = useAppDispatch();
 
-    // useEffect(() => {
-    //     if (product && !watchFile && !isDirty) reset(product);
-    //     return () => {
-    //         if (watchFile) URL.revokeObjectURL(watchFile.preview);
-    //     }
-    // }, [product, reset, watchFile, isDirty])
+    useEffect(() => {
+        if (product && !watchFile && !isDirty) reset(product);
+        return () => {
+            if (watchFile) URL.revokeObjectURL(watchFile.preview);
+        }
+    }, [product, reset, watchFile, isDirty])
 
+    async function handleSubmitData(data: FieldValues)
+    {
+        try {
+            let response: Product;
+            if(product) {
+                response = await agent.Admin.updateProduct(data);   
+            } else {
+                response = await agent.Admin.createProduct(data);
+            }
+            dispatch(setProduct(response));
+            cancelEdit();
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <Box component={Paper} sx={{ p: 4 }}>
             <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
                 Product Details
                 </Typography>
-            <form >
+            <form onSubmit={handleSubmit(handleSubmitData)}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={12}>
                         <AppTextInput control={control} name='name' label='Product name' />

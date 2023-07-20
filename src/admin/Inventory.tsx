@@ -1,13 +1,15 @@
-import { Edit } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import { Box, Typography, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody,Button, Table  } from "@mui/material";
 import { useState } from "react";
 import AppPagination from "../components/UI/AppPagination/AppPagination";
 import { Product } from "../models/product";
 import { useAppDispatch } from "../store/configureStore";
-import { setPageNumber } from "../store/shopping-cart/productSlice";
+import { removeProduct, setPageNumber } from "../store/shopping-cart/productSlice";
 import { currencyFormat } from "../util/util";
 import useProducts from "../hooks/useProducts";
 import ProductForm from "./ProductForm";
+import agent from "../api/agent";
+import { LoadingButton } from "@mui/lab";
 
 
 export default function Inventory() {
@@ -23,14 +25,14 @@ export default function Inventory() {
         setEditMode(true);
     }
 
-    // function handleDeleteProduct(id: number) {
-    //     setLoading(true);
-    //     setTarget(id)
-    //     agent.Admin.deleteProduct(id)
-    //         .then(() => dispatch(removeProduct(id)))
-    //         .catch(error => console.log(error))
-    //         .finally(() => setLoading(false))
-    // }
+    function handleDeleteProduct(id: number) {
+        setLoading(true);
+        setTarget(id);
+        agent.Admin.deleteProduct(id)
+            .then(() => dispatch(removeProduct(id)))
+            .catch(error => console.log(error))
+            .finally(() => setLoading(false));
+    }
 
     function cancelEdit() {
         if (selectedProduct) setSelectedProduct(undefined);
@@ -79,10 +81,10 @@ export default function Inventory() {
                                 <TableCell align="center">{product.quantityInStock}</TableCell>
                                 <TableCell align="right">
                                     <Button onClick={() => handleSelectProduct(product)} startIcon={<Edit />} />
-                                    {/* <LoadingButton 
+                                     <LoadingButton 
                                         loading={loading && target === product.id} 
                                         onClick={() => handleDeleteProduct(product.id)} 
-                                        startIcon={<Delete />} color='error' /> */}
+                                        startIcon={<Delete />} color='error' /> 
                                 </TableCell>
                             </TableRow>
                         ))}

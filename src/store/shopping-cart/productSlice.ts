@@ -101,6 +101,14 @@ export const productSlice = createSlice({
         },
         resetProductParams: (state) => {
             state.productParams = initParams();
+        },
+        setProduct: (state,action) => {
+            productsAdapter.upsertOne(state, action.payload);
+            state.productsLoaded = false;
+        },
+        removeProduct: (state,action) => {
+            productsAdapter.removeOne(state, action.payload);
+            state.productsLoaded = false;
         }
     },
     extraReducers: (builder => {
@@ -144,4 +152,4 @@ export const productSlice = createSlice({
 
 export const productSelectors = productsAdapter.getSelectors((state: RootState) => state.product)
 
-export const {setProductParams, resetProductParams, setMetaData,setPageNumber} = productSlice.actions;
+export const {setProductParams, resetProductParams, setMetaData,setPageNumber,setProduct, removeProduct} = productSlice.actions;
