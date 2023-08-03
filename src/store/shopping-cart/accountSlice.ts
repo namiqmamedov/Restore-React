@@ -32,7 +32,7 @@ export const signInUser = createAsyncThunk<User,FieldValues>(
 export const fetchCurrentUser = createAsyncThunk<User>(
     'account/fetchCurrentUser',
     async (_, thunkAPI) => {
-        thunkAPI.dispatch(setUser(JSON.parse(localStorage.getItem('user')!))) // ! that meaning remove the type safety check :P
+        thunkAPI.dispatch(setUser(JSON.parse(localStorage.getItem('user')!))) // ! that meaning remove the type safety check 
         try {
             const userDto = await agent.Account.currentUser();
             const {basket, ...user} = userDto;
@@ -73,8 +73,8 @@ export const accountSlice = createSlice({
             router.navigate('/');
         })
          builder.addMatcher(isAnyOf(signInUser.fulfilled, fetchCurrentUser.fulfilled), (state,action) => {
-            let claims = JSON.parse(atob(action.payload.token.split('.')[1]));
-            let roles = claims['http://schemas.microsoft.com/2008/06/identity/claims/role'];
+            let claims = JSON.parse(atob(action.payload.token.split('.')[1])); // take admin not member
+            let roles = claims['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']; 
             state.user = {...action.payload, roles: typeof(roles) === 'string' ? [roles] : roles};
          });
          builder.addMatcher(isAnyOf(signInUser.rejected, fetchCurrentUser.rejected), (state,action) => {

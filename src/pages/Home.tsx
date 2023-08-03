@@ -11,7 +11,7 @@ const Home = () => {
   };
   return (
     
-    <div className='slider-index'>
+    <div className='slider-index overflow-hidden'>
       <Slider {...settings}>
         <div>
           <img src="/images/hero1.jpg" alt="hero" style={{display: 'block',width: '100%',maxHeight: 500}} />

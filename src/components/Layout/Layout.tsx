@@ -8,7 +8,7 @@ import Loading from '../../common/Loading/Loading';
 import { useAppDispatch } from '../../store/configureStore';
 import { fetchBasketAsync } from '../../store/shopping-cart/basketSlice';
 import { fetchCurrentUser } from '../../store/shopping-cart/accountSlice';
-import { useLocation } from 'react-router-dom';
+import { ScrollRestoration, useLocation } from 'react-router-dom';
 import Home from '../../pages/Home';
 
 const Layout = () => {
@@ -54,6 +54,7 @@ const Layout = () => {
   return (
     <>
     <ThemeProvider theme={theme}>
+      <ScrollRestoration/>
       <ToastContainer position='bottom-right' hideProgressBar theme='colored'/>
       <CssBaseline/>
         <Header darkMode={false}

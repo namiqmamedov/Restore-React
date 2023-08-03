@@ -1,4 +1,4 @@
-import React from 'react'
+import { Fragment } from 'react'
 import ReactDOM from 'react-dom/client'
 import App from '../src/App'
 import '../src/index.css'
@@ -21,9 +21,9 @@ export const router = createBrowserRouter([
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  <Fragment>
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>
-  </React.StrictMode>,
+  </Fragment>,
 )

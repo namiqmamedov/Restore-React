@@ -36,13 +36,13 @@ const Header = ({darkMode,handleThemeChange} : Props) => {
             <NavLink to="product" className={({ isActive }) => (isActive ? 'link-active' : '')}>
               PRODUCT
             </NavLink>
-            <NavLink to="about" className={({ isActive }) => (isActive ? 'link-active' : '')}>
-              ABOUT
+            <NavLink to="faq" className={({ isActive }) => (isActive ? 'link-active' : '')}>
+              FAQ
             </NavLink>
             <NavLink to="contact" className={({ isActive }) => (isActive ? 'link-active' : '')}>
               CONTACT
             </NavLink>
-            {user && 
+            {user && user.roles?.includes('Admin') && 
                 <NavLink to="inventory" className={({ isActive }) => (isActive ? 'link-active' : '')}>
                   INVENTORY
                 </NavLink>
