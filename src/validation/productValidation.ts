@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-export const validationSchema = [
+export const validationSchema = 
     yup.object({
         name: yup.string().required(),
         brand: yup.string().required(),
@@ -13,4 +13,3 @@ export const validationSchema = [
             then: yup.mixed().required('Please provide an image')
         })
     })
-]
