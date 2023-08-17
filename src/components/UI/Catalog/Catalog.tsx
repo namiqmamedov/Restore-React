@@ -23,7 +23,6 @@ const  Catalog = () => {
 
   if(!filtersLoaded) return <Loading message="Loading..." />
 
-
   return (
     <Grid container columnSpacing={4}>
       <Grid item xs={3}>

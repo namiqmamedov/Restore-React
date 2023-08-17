@@ -34,6 +34,7 @@ export const fetchCurrentUser = createAsyncThunk<User>(
     async (_, thunkAPI) => {
         thunkAPI.dispatch(setUser(JSON.parse(localStorage.getItem('user')!))) // ! that meaning remove the type safety check 
         try {
+            debugger
             const userDto = await agent.Account.currentUser();
             const {basket, ...user} = userDto;
             if(basket) thunkAPI.dispatch(setBasket(basket))

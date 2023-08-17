@@ -9,9 +9,10 @@ import { Product } from "../models/product";
 import { useAppDispatch } from "../store/configureStore";
 import AppSelectList from "../components/UI/AppSelectList/AppSelectList";
 import AppDropzone from "../components/UI/AppDropzone/AppDropzone";
-// import { validationSchema } from "../validation/productValidation";
+import { validationSchema } from "../validation/productValidation";
 import { setProduct } from "../store/shopping-cart/productSlice";
-// import { yupResolver } from "@hookform/resolvers/yup";
+// @ts-ignore
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface Props {
     product?: Product;
@@ -20,7 +21,7 @@ interface Props {
 
 export default function ProductForm({ product, cancelEdit }: Props) {
     const { control, reset, handleSubmit, watch, formState: { isDirty, isSubmitting }} = useForm({
-       // resolver: yupResolver(validationSchema)
+        resolver: yupResolver(validationSchema)
     });
     const { brands, types } = useProducts();
     const watchFile = watch('file', null);

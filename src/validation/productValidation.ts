@@ -9,8 +9,8 @@ export const validationSchema = [
         quantityInStock: yup.number().required().min(0),
         description: yup.string().required(),
         file: yup.mixed().when('pictureUrl', {
-            is: (value: string) => !value
-            // then: yup.mixed().required('Please provide an image')
+            is: (value: string) => !value,
+            then: yup.mixed().required('Please provide an image')
         })
     })
 ]

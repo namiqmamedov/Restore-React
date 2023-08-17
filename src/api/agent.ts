@@ -6,7 +6,7 @@ import { router } from "../main";
 
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500))
 
-axios.defaults.baseURL = "http://localhost:5000/api/"
+axios.defaults.baseURL = 'http://localhost:5000/api'
 axios.defaults.withCredentials = true;
 
 const responseBody = (response: AxiosResponse) => response.data;
@@ -78,23 +78,23 @@ function createFormData(item:any){
 }
 
 const Admin = {
-    createProduct: (product: any) => requests.postForm('product',createFormData(product)),
-    updateProduct: (product: any) => requests.putForm('product',createFormData(product)),
-    deleteProduct: (id: number) => requests.del(`product/${id}`),
+    createProduct: (product: any) => requests.postForm('/product',createFormData(product)),
+    updateProduct: (product: any) => requests.putForm('/product',createFormData(product)),
+    deleteProduct: (id: number) => requests.del(`/product/${id}`),
 }
 
 const Product = {
     list: (params: URLSearchParams) => requests.get('product', params),
-    details: (id: number) => requests.get(`product/${id}`),
-    fetchFilters: () => requests.get('product/filters')
+    details: (id: number) => requests.get(`/product/${id}`),
+    fetchFilters: () => requests.get('/product/filters')
 }
 
 const TestErrors = {
-    get400Error: () => requests.get('buggy/bad-request'),
-    get401Error: () => requests.get('buggy/unauthorised'),
-    get404Error: () => requests.get('buggy/not-found'),
-    get500Error: () => requests.get('buggy/server-error'),
-    getValidationError: () => requests.get('buggy/validation-error')
+    get400Error: () => requests.get('/buggy/bad-request'),
+    get401Error: () => requests.get('/buggy/unauthorised'),
+    get404Error: () => requests.get('/buggy/not-found'),
+    get500Error: () => requests.get('/buggy/server-error'),
+    getValidationError: () => requests.get('/buggy/validation-error')
 }
 
 const Basket = {
@@ -104,20 +104,20 @@ const Basket = {
 }
 
 const Account = {
-    login: (values: any) => requests.post('account/login', values),
-    register: (values: any) => requests.post('account/register', values),
-    currentUser: () => requests.get('account/currentUser'),
-    fetchAddress: () => requests.get('account/savedAddress')
+    login: (values: any) => requests.post('/account/login', values),
+    register: (values: any) => requests.post('/account/register', values),
+    currentUser: () => requests.get('/account/currentUser'),
+    fetchAddress: () => requests.get('/account/savedAddress')
 }
 
 const Orders = {
-    list: () => requests.get('order'),
-    fetch: (id: number) => requests.get(`order/${id}`),
-    create: (values: any) => requests.post('order', values)
+    list: () => requests.get('/order'),
+    fetch: (id: number) => requests.get(`/order/${id}`),
+    create: (values: any) => requests.post('/order', values)
 }
 
 const Payments = {
-    createPaymentIntent: () => requests.post('payment', {})
+    createPaymentIntent: () => requests.post('/payment', {})
 }
 
 const agent = {
